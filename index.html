@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; media-src 'self' data: blob:; connect-src 'self' data: blob:; worker-src 'self' blob:; manifest-src 'self'; form-action 'none'; base-uri 'none'; object-src 'none'">
+<meta name="referrer" content="no-referrer">
+<title>Attendance Sheet — Free Printable Attendance &amp; Sign-in Sheet Maker | S3eidat Tools</title>
+<meta name="description" content="Make a printable attendance register or sign-in sheet: paste your names, pick a month or a number of sessions, skip weekend days, tick boxes or signature columns, A4 or Letter, English or Arabic. Tick attendance on screen and export CSV. Free and private.">
+<meta property="og:title" content="Attendance Sheet — printable registers and sign-in sheets">
+<meta property="og:description" content="Paste names, pick dates, print. Tick attendance on screen and export CSV. Runs 100% in your browser.">
+<link rel="icon" href="kit/icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="kit/kit.css">
+<link rel="stylesheet" href="app.css">
+<script src="kit/kit.js"></script>
+<!--s3:seo-->
+<link rel="canonical" href="https://s3eidat.github.io/attendance-sheet/">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#0d0f12">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="S3eidat Tools">
+<meta property="og:url" content="https://s3eidat.github.io/attendance-sheet/">
+<meta property="og:image" content="https://s3eidat.github.io/attendance-sheet/screenshot.png">
+<meta property="og:image:width" content="1280"><meta property="og:image:height" content="800">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Attendance Sheet — Printable attendance and sign-in sheets">
+<meta name="twitter:description" content="Printable attendance and sign-in sheets. Free, private and runs 100% in your browser: no sign-up, no uploads.">
+<meta name="twitter:image" content="https://s3eidat.github.io/attendance-sheet/screenshot.png">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebApplication", "name": "Attendance Sheet", "url": "https://s3eidat.github.io/attendance-sheet/", "description": "Printable attendance and sign-in sheets. Free, private and runs 100% in your browser: no sign-up, no uploads.", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Any (web browser)", "isAccessibleForFree": true, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "image": "https://s3eidat.github.io/attendance-sheet/screenshot.png", "author": {"@type": "Person", "name": "s3eidat", "url": "https://github.com/s3eidat"}}</script>
+<!--/s3:seo-->
+</head>
+<body data-tool="attendance-sheet">
+<main class="s3-main no-print">
+  <section class="s3-hero">
+    <h1>Attendance Sheet</h1>
+    <p>Paste your list of names, choose the dates, and print a clean register or sign-in sheet. You can also tick attendance right here and export it as CSV. Nothing leaves your browser.</p>
+  </section>
+
+  <div class="as-grid">
+    <div class="stack as-editor">
+      <section class="card stack">
+        <h2>Sheet</h2>
+        <label class="field">Title<input class="input" id="title" dir="auto" maxlength="80" placeholder="Attendance"></label>
+        <div class="grid-2">
+          <label class="field">Class / group<input class="input" id="group" dir="auto" maxlength="80" placeholder="Grade 7 B"></label>
+          <label class="field">Teacher / host<input class="input" id="teacher" dir="auto" maxlength="80" placeholder="Optional"></label>
+        </div>
+        <label class="field"><span class="row between">Names <span class="faint" id="nameCount">0 names</span></span>
+          <textarea class="textarea prose" id="names" dir="auto" spellcheck="false" placeholder="One name per line. Paste straight from a spreadsheet."></textarea>
+        </label>
+        <div class="row">
+          <button class="btn small" id="sortNames" type="button">Sort A–Z</button>
+          <button class="btn ghost small" id="sample" type="button">Sample names</button>
+          <span class="grow"></span>
+          <label class="field as-inline">Extra blank rows<input class="input" id="extra" type="number" min="0" max="60" value="2"></label>
+        </div>
+      </section>
+
+      <section class="card stack">
+        <h2>Dates</h2>
+        <div class="seg" id="mode" role="group" aria-label="Date columns">
+          <button aria-pressed="true" data-v="month">A month</button>
+          <button aria-pressed="false" data-v="sessions">Sessions from a date</button>
+          <button aria-pressed="false" data-v="blank">Blank columns</button>
+        </div>
+        <div class="grid-2">
+          <label class="field" id="monthWrap">Month<input class="input" id="month" type="month"></label>
+          <label class="field" id="startWrap">First date<input class="input" id="start" type="date"></label>
+          <label class="field" id="countWrap">Number of sessions<input class="input" id="count" type="number" min="1" max="100" value="12"></label>
+        </div>
+        <div class="field" id="skipWrap"><span>Skip these weekdays</span>
+          <div class="as-days" id="skip" role="group" aria-label="Skip weekdays"></div>
+        </div>
+        <p class="faint as-dates" id="dateInfo"></p>
+      </section>
+
+      <section class="card stack">
+        <h2>Layout</h2>
+        <div class="field"><span>Cells</span>
+          <div class="seg" id="cell" role="group" aria-label="Cell style">
+            <button aria-pressed="true" data-v="box">Tick boxes</button>
+            <button aria-pressed="false" data-v="blank">Empty cells</button>
+            <button aria-pressed="false" data-v="sign">Signature</button>
+          </div>
+        </div>
+        <div class="grid-2">
+          <label class="field">Paper
+            <select class="select" id="paper"><option value="A4">A4 (210 × 297 mm)</option><option value="Letter">Letter (8.5 × 11 in)</option></select>
+          </label>
+          <label class="field">Orientation
+            <select class="select" id="orient"><option value="landscape">Landscape</option><option value="portrait">Portrait</option></select>
+          </label>
+          <label class="field">Row height
+            <select class="select" id="rowH"><option value="7">Compact (7 mm)</option><option value="8">Normal (8 mm)</option><option value="10">Roomy (10 mm)</option><option value="13">Signature (13 mm)</option></select>
+          </label>
+          <label class="field">Labels
+            <select class="select" id="lang"><option value="en">English</option><option value="ar">العربية (right to left)</option></select>
+          </label>
+        </div>
+        <div class="row">
+          <label class="check"><input type="checkbox" id="num" checked> Number the rows</label>
+          <label class="check"><input type="checkbox" id="total" checked> Total column</label>
+          <label class="check"><input type="checkbox" id="printMarks"> Print the ticks I record</label>
+        </div>
+      </section>
+    </div>
+
+    <section class="card as-out">
+      <div class="row between">
+        <div class="seg" id="view" role="group" aria-label="View">
+          <button aria-pressed="true" data-v="sheet">Printable sheet</button>
+          <button aria-pressed="false" data-v="register">Take attendance</button>
+        </div>
+        <span class="chip" id="status">Waiting</span>
+      </div>
+
+      <div id="sheetView">
+        <div class="as-stage" id="stage"><div id="preview"></div></div>
+        <div class="row mt">
+          <button class="btn primary grow" id="print"><svg class="i"><use href="#i-file"/></svg>Print</button>
+          <button class="btn grow" id="csvBlank"><svg class="i"><use href="#i-download"/></svg>Names + dates CSV</button>
+        </div>
+        <p class="faint center">Tip: in the print dialog keep scale at 100% and choose “Save as PDF” to get a PDF.</p>
+      </div>
+
+      <div id="registerView" hidden>
+        <p class="faint">Click a cell to cycle <b class="as-k p">✓ present</b> <b class="as-k a">✗ absent</b> <b class="as-k l">L late</b> and back to empty. Click a date heading to mark everyone still empty as present. Saved in this browser only.</p>
+        <div class="tbl-wrap as-reg-wrap"><table class="tbl as-reg" id="reg"></table></div>
+        <div class="row mt">
+          <button class="btn primary grow" id="csv"><svg class="i"><use href="#i-download"/></svg>Export CSV</button>
+          <button class="btn grow" id="copyCsv"><svg class="i"><use href="#i-copy"/></svg>Copy CSV</button>
+          <button class="btn ghost" id="clearMarks"><svg class="i"><use href="#i-trash"/></svg>Clear ticks</button>
+        </div>
+        <div class="stats mt" id="regStats"></div>
+      </div>
+    </section>
+  </div>
+</main>
+<div id="sheet" aria-hidden="true"></div>
+<script src="app.js"></script>
+</body>
+</html>
